@@ -12,4 +12,13 @@ class Channel:
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        print (json.dumps(self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute(), indent=2, ensure_ascii=False))
+        return json.dumps(dict_to_print, indent=2, ensure_ascii=False)
+
+        @classmethod
+        def get_service(cls):
+            return Channel
+
+    def to_json(title,video_count, url):
+        file = open("file.json", "w")
+        file.write(title,video_count, url)
+        return file
