@@ -1,5 +1,7 @@
 import json
 import os
+from distutils.command.build import build
+
 
 class Channel:
     """Класс для ютуб-канала"""
@@ -29,3 +31,4 @@ class Channel:
         file = open("file.json", "w")
         file.write(title,video_count, url)
         return file
+
