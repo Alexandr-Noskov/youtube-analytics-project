@@ -1,6 +1,7 @@
 import json
 import os
-from distutils.command.build import build
+
+from googleapiclient.discovery import build
 
 
 class Channel:
@@ -24,11 +25,22 @@ class Channel:
         return json.dumps(dict_to_print, indent=2, ensure_ascii=False)
 
     @classmethod
-    def get_service(cls):
-        return Channel
+    def get_service(cls) -> build:
+        """Возвращает объект для работы с API youtube."""
+        service = build('youtube', 'v3', developerKey=cls.__API_KEY)
+        return service
 
-    def to_json(title,video_count, url):
-        file = open("file.json", "w")
-        file.write(title,video_count, url)
-        return file
+    def to_json(self, filename: str) -> None:
+        """Сохраняет данные экземпляра класса в файл."""
+        channel_data = {
+            'channel_id': self.channel_id,
+            'title': self.channel_name,
+            'description': self.chanel_description,
+            'url': self.channel_link,
+            'subscriber_count': self.number_of_subscribers,
+            'video_count': self.number_of_videos,
+            'view_count': self.total_views,
+        }
+        with open(filename, 'w') as fp:
+            json.dump(channel_data, fp)
 
