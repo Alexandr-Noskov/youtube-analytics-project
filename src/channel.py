@@ -25,10 +25,9 @@ class Channel:
         return json.dumps(dict_to_print, indent=2, ensure_ascii=False)
 
     @classmethod
-    def get_service(cls) -> build:
-        """Возвращает объект для работы с API youtub."""
-        service = build('youtube', 'v3', developerKey=cls.__API_KEY)
-        return service
+    def get_service(cls):
+        """Возвращает объект для работы с API youtube."""
+        return cls.youtube
 
     def to_json(self, filename: str) -> None:
         """Сохраняет данные экземпляра класса в файл."""
@@ -44,3 +43,30 @@ class Channel:
         with open(filename, 'w') as fp:
             json.dump(channel_data, fp)
 
+    def __str__(self):
+        """Выведение названия канала и ссылки"""
+        return f'{self.channel_name}, {self.channel_link}'
+
+    def __add__(self, other):
+        """Метод для сложения количества подписчиков каналов"""
+        return self.number_of_subscribers + other.number_of_subscribers
+
+    def __sub__(self, other):
+        """Метод для операции вычитания"""
+        return self.number_of_subscribers - other.number_of_subscribers
+
+    def __lt__(self, other):
+        """Для операции сравнения «меньше»"""
+        return self.number_of_subscribers < other.number_of_subscribers
+
+    def __le__(self, other):
+        """Для сравнения «меньше» или «равно»"""
+        return self.number_of_subscribers <= other.number_of_subscribers
+
+    def __gt__(self, other):
+        """Метод для операции сравнения «больше»"""
+        return self.number_of_subscribers > other.number_of_subscribers
+
+    def __ge__(self, other):
+        """Метод для операции сравнения «больше» или «равно»"""
+        return self.number_of_subscribers >= other.number_of_subscribers
