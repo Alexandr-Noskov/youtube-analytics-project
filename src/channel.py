@@ -9,6 +9,11 @@ class Channel:
     api_key: str = os.getenv('YT API_KEY')
     youtube = build('youtube', 'v3', developerKey=api_key)
 
+    @classmethod
+    def get_service(cls):
+        """Возвращает объект для работы с API youtube."""
+        return cls.youtube
+
     def __init__(self, channel_id: str, channel_name, chanel_description, channel_link, number_of_subscribers,
                  number_of_videos, total_views) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
@@ -24,10 +29,6 @@ class Channel:
         """Выводит в консоль информацию о канале."""
         return json.dumps(dict_to_print, indent=2, ensure_ascii=False)
 
-    @classmethod
-    def get_service(cls):
-        """Возвращает объект для работы с API youtube."""
-        return cls.youtube
 
     def to_json(self, filename: str) -> None:
         """Сохраняет данные экземпляра класса в файл."""
@@ -49,24 +50,45 @@ class Channel:
 
     def __add__(self, other):
         """Метод для сложения количества подписчиков каналов"""
-        return self.number_of_subscribers + other.number_of_subscribers
+        if not isinstance(other, Channel):
+            raise ValueError("Складывать можно только два объекта Channel.")
+        else:
+            return int(self.subscriber_count) + int(other.subscriber_count)
 
     def __sub__(self, other):
         """Метод для операции вычитания"""
-        return self.number_of_subscribers - other.number_of_subscribers
+        return int(self.subscriber_count) - int(other.subscriber_count)
 
     def __lt__(self, other):
         """Для операции сравнения «меньше»"""
-        return self.number_of_subscribers < other.number_of_subscribers
+        return int(self.subscriber_count) < int(other.subscriber_count)
 
     def __le__(self, other):
         """Для сравнения «меньше» или «равно»"""
-        return self.number_of_subscribers <= other.number_of_subscribers
+        return int(self.subscriber_count) <= int(other.subscriber_count)
 
     def __gt__(self, other):
         """Метод для операции сравнения «больше»"""
-        return self.number_of_subscribers > other.number_of_subscribers
+        return int(self.subscriber_count) > int(other.subscriber_count)
 
     def __ge__(self, other):
         """Метод для операции сравнения «больше» или «равно»"""
-        return self.number_of_subscribers >= other.number_of_subscribers
+        return int(self.subscriber_count) >= int(other.subscriber_count)
+
+    def print_info(self) -> None:
+        """Выводит информацию о канале"""
+        channel = Channel.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute()
+        info = json.dumps(channel, indent=2, ensure_ascii=False)
+        print(info)
+
+    def to_json(self, file_name):
+        yt_dict = {}
+        yt_dict["id"] = self.__channel_id
+        yt_dict["title"] = self.title
+        yt_dict["description"] = self.description
+        yt_dict["url"] = self.url
+        yt_dict["subscriber_count"] = self.subscriber_count
+        yt_dict["video_count"] = self.video_count
+        yt_dict["view_count"] = self.view_count
+        with open(file_name, 'w', encoding="UTF-8") as file:
+            json.dump(yt_dict, file, indent=2, ensure_ascii=False)
