@@ -7,10 +7,6 @@ from helper.youtube_api_manual import api_key
 
 
 class Video:
-    """Класс для ютуб-канала"""
-    youtube = build('youtube', 'v3', developerKey=api_key)
-    return youtube
-
     def __init__(self, video_id):
         self.video_id = video_id
         video_response = Video.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails', id=video_id).execute()
