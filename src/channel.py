@@ -12,7 +12,7 @@ class Channel:
     @classmethod
     def get_service(cls):
         """Возвращает объект для работы с API youtube."""
-        return cls.youtube
+        return build('youtube', 'v3', developerKey=os.getenv('YT_API_KEY'))
 
     def __init__(self, channel_id: str, channel_name, chanel_description, channel_link, number_of_subscribers,
                  number_of_videos, total_views) -> None:

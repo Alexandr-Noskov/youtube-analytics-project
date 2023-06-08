@@ -1,9 +1,6 @@
 import datetime
-from googleapiclient.discovery import build
 
 from datetime import timedelta
-
-from helper.youtube_api_manual import api_key
 
 
 class Video:
