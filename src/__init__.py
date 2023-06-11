@@ -1,4 +1,4 @@
-import self as self
+import self
 
 from helper.youtube_api_manual import video_id
 
